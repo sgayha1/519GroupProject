@@ -1,4 +1,5 @@
 import java.io.File;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -64,23 +65,24 @@ public class App {
                 else{
                     System.out.println("You do not have permission to view this file");
                 }
-            } else if (inputArray[0].equals("touch")) {
+            } 
+            //Touches a file
+            else if (inputArray[0].equals("touch")) {
                 if(admin){
                     File f = new File(inputArray[1]);
-                    f.createNewFile();
+                    try{
+                        PrintWriter writer = new PrintWriter(f);
+                        writer.close();
+                    }
+                    catch (Exception e){
+                        System.out.println("File not found");
+                    }
                 }
                 else{
-                    System.out.println("You do not have permission to create this file");
+                    System.out.println("You do not have permission to view this file");
                 }
-            } else if (inputArray[0].equals("rm")) {
-                if (admin){
-                    File f = new File(inputArray[1]);
-                    f.delete();
-                }
-                else{
-                    System.out.println("You do not have permission to delete this file");
-                }
-            } else if(inputArray[0].equals("createfile")){
+            }
+            else if(inputArray[0].equals("createfile")){
                 if(admin){
                     File f = new File(inputArray[1]);
                     f.createNewFile();
@@ -120,33 +122,54 @@ public class App {
                 else{
                     System.out.println("You do not have permission to rename this file");
                 }
-            }else if(inputArray[0].equals("copy")){
+            }
+            //Copies from one file to another
+            else if(inputArray[0].equals("copy")){
                 if(admin){
+                    File f = new File(inputArray[1]);
+                    File f2 = new File(inputArray[2]);
                     try{
-                        File f = new File(inputArray[1]);
-                        File f2 = new File(inputArray[2]);
-                        f.renameTo(f2);
+                        Scanner fileScanner = new Scanner(f); 
+                        while (fileScanner.hasNextLine()) {
+                            f2.createNewFile();
+                            Scanner fileScanner2 = new Scanner(f2); 
+                            while (fileScanner2.hasNextLine()) {
+                                System.out.println(fileScanner2.nextLine());
+                            }
+                        }
                     }
-                    catch(Exception e){
+                    catch (Exception e){
                         System.out.println("File not found");
                     }
                 }
                 else{
                     System.out.println("You do not have permission to copy this file");
                 }
-            }else if(inputArray[0].equals("move")){
+            }
+            //Moves a file into a different Path
+            else if(inputArray[0].equals("move")){
                 if(admin){
-                    try{
+                    if(admin){
                         File f = new File(inputArray[1]);
                         File f2 = new File(inputArray[2]);
-                        f.renameTo(f2);
+                        try{
+                            Scanner fileScanner = new Scanner(f); 
+                            while (fileScanner.hasNextLine()) {
+                                f2.createNewFile();
+                                Scanner fileScanner2 = new Scanner(f2); 
+                                while (fileScanner2.hasNextLine()) {
+                                    System.out.println(fileScanner2.nextLine());
+                                }
+                                f.delete();
+                            }
+                        }
+                        catch (Exception e){
+                            System.out.println("File not found");
+                        }
                     }
-                    catch(Exception e){
-                        System.out.println("File not found");
+                    else{
+                        System.out.println("You do not have permission to copy this file");
                     }
-                }
-                else{
-                    System.out.println("You do not have permission to move this file");
                 }
             }else if(inputArray[0].equals("append")){
                 if(admin){
@@ -156,21 +179,25 @@ public class App {
                 else{
                     System.out.println("You do not have permission to append this file");
                 }
-            }else if(inputArray[0].equals("write")){
+            }
+            //Writes a file
+            else if (inputArray[0].equals("write")){
                 if(admin){
+                    File f = new File(inputArray[1]);
                     try{
-                        File f = new File(inputArray[1]);
-                        Scanner fileScanner = new Scanner(f); 
-                        while (fileScanner.hasNextLine()) {
-                            System.out.println(fileScanner.nextLine());
+                        PrintWriter writer = new PrintWriter(f);
+                        for(int i = 2; i < inputArray.length; i++){
+                            writer.print(inputArray[i]);
                         }
+                        writer.println();
+                        writer.close();
                     }
                     catch (Exception e){
                         System.out.println("File not found");
                     }
                 }
                 else{
-                    System.out.println("You do not have permission to write to this filae");
+                    System.out.println("You do not have permission to write this file");
                 }
             }
             //Creates a folder in a specific directory 
