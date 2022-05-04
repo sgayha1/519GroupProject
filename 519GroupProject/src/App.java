@@ -124,19 +124,17 @@ public class App {
                 }
             }
             //Copies from one file to another
-            else if(inputArray[0].equals("copy")){
+            else if (inputArray[0].equals("copy")) {
                 if(admin){
                     File f = new File(inputArray[1]);
                     File f2 = new File(inputArray[2]);
                     try{
                         Scanner fileScanner = new Scanner(f); 
+                        PrintWriter writer = new PrintWriter(f2);
                         while (fileScanner.hasNextLine()) {
-                            f2.createNewFile();
-                            Scanner fileScanner2 = new Scanner(f2); 
-                            while (fileScanner2.hasNextLine()) {
-                                System.out.println(fileScanner2.nextLine());
-                            }
+                            writer.println(fileScanner.nextLine());
                         }
+                        writer.close();
                     }
                     catch (Exception e){
                         System.out.println("File not found");
@@ -171,10 +169,19 @@ public class App {
                         System.out.println("You do not have permission to copy this file");
                     }
                 }
-            }else if(inputArray[0].equals("append")){
+            }
+            //Appends a file
+            else if(inputArray[0].equals("append")){
                 if(admin){
                     File f = new File(inputArray[1]);
-                    f.renameTo(new File(inputArray[2]));
+                    try{
+                        PrintWriter writer = new PrintWriter(f);
+                        writer.println(inputArray[2]);
+                        writer.close();
+                    }
+                    catch (Exception e){
+                        System.out.println("File not found");
+                    }
                 }
                 else{
                     System.out.println("You do not have permission to append this file");
@@ -267,7 +274,7 @@ public class App {
                     //Creating a File object
                     File f = new File(path);
                     //deleting the file
-                    boolean bool = f.createNewFile();
+                    boolean bool = f.delete();
                     if(bool){
                         System.out.println("File deleted successfully");
                     }else{
